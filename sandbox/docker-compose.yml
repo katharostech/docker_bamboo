@@ -1,0 +1,22 @@
+version: '2'
+services:
+  mysql-server:
+    image: mysql:5.6
+    environment:
+      MYSQL_DATABASE: $DB_NAME
+      MYSQL_ROOT_PASSWORD: $DB_PASSWORD
+    volumes:
+     - database_storage:/var/lib/mysql
+     - ./db_init.d:/docker-entrypoint-initdb.d
+    command: --character-set-server=utf8 --collation-server=utf8_bin --default-storage-engine=INNODB --max_allowed_packet=256M --innodb_log_file_size=256M
+
+  bamboo:
+    image: kadimasolutions/bamboo
+    environment: 
+      JVM_MIN_MEM: 256m
+      JVM_MAX_MEM: 512m
+    ports:
+     - ${BAMBOO_PORT}:8085
+    volumes:
+     - ${BAMBOO_HOME_LOCAL}:/app/bamboo_home:Z
+
